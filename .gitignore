@@ -1,0 +1,6 @@
+/myenv
+/Input-videos/*.mp4
+/Output-videos/*.mp4
+__pycache__
+test.csv
+*.mp4

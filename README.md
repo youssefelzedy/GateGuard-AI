@@ -42,6 +42,14 @@ Verify the installation:
 python --version
 ```
 
+## Cloning Required Repository
+
+Before proceeding, clone the `filterpy` repository:
+
+```bash
+git clone https://github.com/rlabbe/filterpy.git
+```
+
 ## Setup Instructions
 
 1. **Create and activate a virtual environment:**

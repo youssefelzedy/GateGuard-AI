@@ -1,8 +1,11 @@
+import torch
 import string
 import easyocr
-
-# Initialize the OCR reader
-reader = easyocr.Reader(['ar'], gpu=False)
+from ultralytics import YOLO
+import cv2
+import numpy as np
+import pandas as pd
+from PIL import Image
 
 # Mapping dictionaries for character conversion
 dict_char_to_int = {'O': '0',
@@ -104,32 +107,81 @@ def format_license(text):
 
     return license_plate_
 
+import cv2
+import numpy as np
+from ultralytics import YOLO
 
-def read_license_plate(license_plate_crop):
-    """
-    Read the license plate text from the given cropped image.
+def detect_text_yolo(ocr_yolo_model, cropped_image):
+    # Load the YOLO model
+    model = YOLO(ocr_yolo_model)
 
-    Args:
-        license_plate_crop (PIL.Image.Image): Cropped image containing the license plate.
+    # Run prediction
+    results = model.predict(source=cropped_image, conf=0.25)
 
-    Returns:
-        tuple: Tuple containing the formatted license plate text and its confidence score.
-    """
+    # print("RESULTS ==========================")
+    # print(results[0].boxes)
+    # print("==================================")
 
-    detections = reader.readtext(license_plate_crop)
+    detected_numbers = []
+    detected_letters = []
+    character_bboxes = []
+    all_predictions = []
 
-    for detection in detections:
-        bbox, text, score = detection
+    # Get class names
+    possible_classes = results[0].names  
 
-        text = text.replace('', ' ')
-        print("TEXT ========================")
-        print(text, score)
-        print("========================")
+    # Get detected boxes
+    boxes = results[0].boxes
 
-        # if license_complies_format(text):
-        return text, score
+    # Check if any boxes were detected
+    if boxes is None or len(boxes) == 0:
+        return None, [], [], [], []  # Return empty values if no detections
 
-    return None, None
+    # Convert image to numpy for visualization
+    recognized_image = np.array(results[0].plot())
+    recognized_image = cv2.cvtColor(recognized_image, cv2.COLOR_BGR2RGB)
+
+    for i in range(len(boxes)):
+        x1, y1, x2, y2 = map(int, boxes.xyxy[i])  # Bounding box coordinates
+        conf = boxes.conf[i].item()  # Confidence score
+        class_id = int(boxes.cls[i].item())  # Predicted class index
+        recognized_text = possible_classes[class_id]  # Class name
+
+        # Store bounding box info
+        character_bboxes.append([x1, y1, x2, y2])
+
+        # **Extract Top-3 Predictions for this Bounding Box**
+        char_options = []
+        for j in range(len(boxes.cls)):  
+            if j == i:  # Only consider the current box's predictions
+                cls_id = int(boxes.cls[j].item())
+                cls_conf = boxes.conf[j].item()
+                char_options.append((possible_classes[cls_id], cls_conf))
+
+        # print("ooooooooooooooooooooooooooooooooooooooooo")
+        # Sort by confidence and keep the top 3
+        char_options_sorted = sorted(char_options, key=lambda x: x[1], reverse=True)[:3]  
+        
+        formatted_options = " / ".join([f"{char} ({score:.2f})" for char, score in char_options_sorted])
+        
+        # Separate numbers and letters
+        if any(char.isdigit() for char, _ in char_options_sorted):
+            detected_numbers.append(formatted_options)
+        else:
+            detected_letters.append(formatted_options)
+
+        # Store all possibilities
+        all_predictions.append([x1, y1, x2, y2, formatted_options])
+
+        # **Draw bounding box and text on the image**
+        # cv2.rectangle(recognized_image, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Green box
+        # cv2.putText(recognized_image, formatted_options, (x1, y1 - 10),
+                    # cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)  # Display text
+
+        # Print the formatted options for debugging
+        # print(f"Box {i}: ({x1}, {y1}, {x2}, {y2}) → {formatted_options}")
+
+    return recognized_image, detected_numbers, detected_letters, character_bboxes, all_predictions
 
 
 def get_car(license_plate, vehicle_track_ids):

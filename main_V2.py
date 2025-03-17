@@ -1,9 +1,9 @@
 from ultralytics import YOLO
 import cv2
 
-import util_V1
+import util_V2
 from sort.sort import *
-from util_V1 import get_car, write_csv, detect_text_yolo
+from util_V2 import get_car, detect_text_yolo, separate_numbers_letters, format_license
 import torch
 
 import numpy as np
@@ -22,7 +22,7 @@ license_plate_detector = YOLO('./models/license_plate_detector.pt')
 license_plate_detector2 = YOLO('./models/yolo11m_car_plate_trained.pt')
 
 # load video
-cap = cv2.VideoCapture('./Input-videos/test10.mp4')
+cap = cv2.VideoCapture('./Input-videos/test3.mp4')
 
 vehicles = [2, 3, 5, 7]
 
@@ -69,15 +69,29 @@ while ret:
                 recognized_image, detected_numbers, detected_letters, character_bboxes, all_predictions = detect_text_yolo(
                     ocr_yolo_model, image_enhanced
                 )
-                print("Image Text ==========================")
-                print(detected_numbers, detected_letters)
-                print("=====================================")
+
+                # print("Image Text ==========================")
+                # print(detected_numbers, detected_letters)
+                # print("=====================================")
                 print("All Predictions ======================")
                 print(all_predictions)
                 print("=====================================")
 
+                sorted_data = sorted(all_predictions, key=lambda x: x[0])
+                
+                # split numbers and letters
+                print(x2 - x1)
+                num, char = separate_numbers_letters(sorted_data, x2 - x1)
+                
+                
+                # format license plate
+                license_plate_text = format_license(num, char)
+                print("License Plate ======================")
+                print(license_plate_text)
+                print("=====================================")
+                
                 # Show the image with bounding boxes and predictions
-                cv2.imshow("Detected Characters", image_enhanced)
+                cv2.imshow("Detected Characters", recognized_image)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
@@ -101,4 +115,4 @@ while ret:
 
 
 # write results
-write_csv(results, './test.csv')
+# write_csv(results, './test.csv')

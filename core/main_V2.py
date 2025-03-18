@@ -1,9 +1,8 @@
 from ultralytics import YOLO
 import cv2
 
-import util_V2
 from sort.sort import *
-from util_V2 import get_car, detect_text_yolo, separate_numbers_letters, format_license
+from utils.util_V2 import get_car, detect_text_yolo, separate_numbers_letters, format_license
 import torch
 
 import numpy as np

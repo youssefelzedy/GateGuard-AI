@@ -1,9 +1,8 @@
 from ultralytics import YOLO
 import cv2
 
-import util_V1
 from sort.sort import *
-from util_V1 import get_car, read_license_plate, write_csv, detect_text_yolo, detect_plate_text, crop_LowerPart_Plate
+from utils.util_V1 import get_car, read_license_plate, write_csv, detect_text_yolo, detect_plate_text, crop_LowerPart_Plate
 import torch
 
 import numpy as np

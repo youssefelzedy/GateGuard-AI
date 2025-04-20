@@ -68,13 +68,7 @@ git clone https://github.com/rlabbe/filterpy.git
 3. **Run the main script:**
 
    ```bash
-   python main.py
-   ```
-
-4. **Run the visualization script (if needed):**
-
-   ```bash
-   python visualize.py
+   uvicorn api.server:app --host 0.0.0.0 --port 8000
    ```
 
 ## Troubleshooting

@@ -60,7 +60,7 @@ packaging==24.2
 paddleocr==2.9.1
 paddlepaddle-gpu==2.6.2
 pandas==2.0.2
-Pillow==9.5.0
+Pillow==10.0.0
 protobuf==6.30.0
 psutil==7.0.0
 py-cpuinfo==9.0.0

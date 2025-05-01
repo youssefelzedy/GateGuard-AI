@@ -16,12 +16,9 @@ def getname(n):
     Get the name of the character from its code.
     This function takes a character code as input and returns the corresponding character name.
     The mapping is defined in the 'code' dictionary.
-
     Args:
-
           n (int): The character code.
-
-          Returns:
+    Returns:
           str: The name of the character.
    """
     for k, v in code.items():
@@ -29,22 +26,32 @@ def getname(n):
             return k
 
 
-def predict_character(model_n, img_1):
+def predict_characters(model_n, img_1):
     """Predict the character in the image using the trained model.
     This function takes the image and a trained model as input, preprocesses the image,
     and predicts the character using the model. The predicted character is then displayed.
     Args:
         model_n (torch.nn.Module): The trained model for character recognition.
         path (str): The path to the image file.
-
-        Returns:
+    Returns:
         None
     """
+    results = []
 
     img_1 = cv2.resize(img_1, (32, 32))
     img_1 = np.array(img_1)
     img_1_3d = img_1.reshape((1, 32, 32))
+
     img_1_prob = model_n.predict(np.array(img_1_3d))
-    img_1_pred = img_1_prob.argmax(axis=1)
-    character = getname(img_1_pred)
-    return character
+
+    top_4_indices = img_1_prob.argsort(axis=1)[:, -4:][:, ::-1]
+    top_4_probabilities = img_1_prob[0][top_4_indices[0]]
+
+    print("Top 4 predictions:", getname(top_4_indices[0][0]), getname(top_4_indices[0][1]), getname(top_4_indices[0][2]))
+
+
+    for i in range(4):
+        results.append([getname(top_4_indices[0][i]), top_4_probabilities[i]])
+    
+    print("Top 4 predictions with probabilities:", results)
+    return results

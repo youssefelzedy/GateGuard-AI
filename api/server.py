@@ -1,8 +1,7 @@
 from fastapi import FastAPI, WebSocket
 import base64
-from source ~/Downloads/GateGuard-AI/myenv/bin/activate
+from core.main_V4 import final_model
 
-.main_V3 import final_model
 import cv2
 import numpy as np
      

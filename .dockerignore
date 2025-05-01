@@ -7,4 +7,5 @@ __pycache__
 test.csv
 *.mp4
 
+/cloped
 character_predictions.xlsx

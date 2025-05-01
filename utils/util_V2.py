@@ -1,98 +1,10 @@
-import torch
-import string
-import easyocr
 from ultralytics import YOLO
 import cv2
 import numpy as np
 import pandas as pd
 from PIL import Image
 
-# Mapping dictionaries for character conversion
-dict_char_to_int = {'alif': '1',
-                    'jeem': '2',
-                    'seen': '3',
-                    'ain': '4',
-                    'haa': '5',
-                    'meem': '6'}
-
-dict_int_to_char = {'1': 'alif',
-                    '2': 'jeem',
-                    '3': 'seen',
-                    '4': 'ain',
-                    '5': 'haa',
-                    '6': 'meem'}
-
-
-def separate_numbers_letters(predictions, width):
-    """
-    Separate the numbers and letters in the license plate text.
-
-    Args:
-        predictions (str): License plate text.
-        image (PIL.Image): License plate image.
-
-
-    Returns:
-        tuple: Tuple containing the separated numbers and letters.
-    """
-
-    # initialize lists
-    num = []
-    char = []
-
-    # Separate numbers and letters
-    for prediction in predictions:
-        x1, y1, x2, y2, text = prediction
-        if x1 < width/2:
-            num.append(prediction)
-        else:
-            char.append(prediction)
-
-    return num, char
-
-
-def format_license(num, char):
-    """
-    Format the license plate text.
-
-    Args:
-        num (list): List of detected numbers.
-        char (list): List of detected letters.
-
-    Returns:
-        str: Formatted license plate text.
-    """
-    license_plate_ = ''
-
-    # Map the detected characters to the correct format
-    for i in range(len(num)):
-        x1, y1, x2, y2, text = num[i]
-        
-        cleaned_text = text.split("(")[0].strip()
-        if cleaned_text in dict_char_to_int.keys():
-            license_plate_ += dict_char_to_int[cleaned_text]
-        else:
-            license_plate_ += cleaned_text
-
-        license_plate_ += '-'
-
-    for i in range(len(char)):
-        x1, y1, x2, y2, text = char[i]
-        
-        cleaned_text = text.split("(")[0].strip()
-        if cleaned_text in dict_int_to_char.keys():
-            license_plate_ += dict_int_to_char[cleaned_text]
-        else:
-            license_plate_ += cleaned_text
-
-        if i != len(char) - 1:
-            license_plate_ += '-'
-
-    return license_plate_
-
-
 def detect_text_yolo(model, cropped_image):
-
     """
     Detect text in the cropped image using YOLOv8.
     Args:
@@ -110,7 +22,7 @@ def detect_text_yolo(model, cropped_image):
     results = model.predict(source=cropped_image, conf=0.25)
 
     # print("RESULTS ==========================")
-    # print(results[0].boxes)
+    # print(results[0].probs)
     # print("==================================")
 
     detected_numbers = []
@@ -180,11 +92,9 @@ def detect_text_yolo(model, cropped_image):
 def get_car(license_plate, vehicle_track_ids):
     """
     Retrieve the vehicle coordinates and ID based on the license plate coordinates.
-
     Args:
         license_plate (tuple): Tuple containing the coordinates of the license plate (x1, y1, x2, y2, score, class_id).
         vehicle_track_ids (list): List of vehicle track IDs and their corresponding coordinates.
-
     Returns:
         tuple: Tuple containing the vehicle coordinates (x1, y1, x2, y2) and ID.
     """

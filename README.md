@@ -52,6 +52,8 @@ git clone https://github.com/rlabbe/filterpy.git
 
 ## Setup Instructions
 
+### Using Your Machine to RUN the model
+
 1. **Create and activate a virtual environment:**
 
    ```bash
@@ -68,8 +70,56 @@ git clone https://github.com/rlabbe/filterpy.git
 3. **Run the main script:**
 
    ```bash
-   uvicorn api.server:app --host 0.0.0.0 --port 8000
+   uvicorn api.server:app --host 0.0.0.0 --port 8000 --reload
    ```
+
+---
+
+### 🐳 Docker Setup
+
+You can easily run this project using Docker. Follow the steps below to build and run the application in a containerized environment.
+
+#### 📦 Prerequisites
+
+* [Docker](https://www.docker.com/get-started) installed on your machine
+
+#### 🚀 Build the Docker Image
+
+```bash
+docker build -t gate-guard-ai .
+```
+
+> This will:
+>
+> * Use Python 3.11-slim as a base
+> * Copy your project files into the container
+> * Install required system dependencies (`libgl1`, `libglib2.0-0`)
+> * Install Python dependencies from `requirements.txt`
+
+#### ▶️ Run the Docker Container
+
+```bash
+docker run -p 8000:8000 gate-guard-ai
+```
+
+> This starts the FastAPI server using `uvicorn` on port `8000`.
+
+You can now access your API at: [http://localhost:8000](http://localhost:8000)
+
+#### 🔁 Auto-Reload (Development Mode)
+
+To enable live reloading (already enabled via `--reload` in CMD), make sure you **mount your local volume** like this:
+
+```bash
+docker run -p 8000:8000 -v ${PWD}:/app gate-guard-ai
+```
+
+> Changes made to the code will automatically reflect inside the container.
+
+---
+
+Would you like me to generate a `docker-compose.yml` file for easier multi-container setup or add examples for endpoints in FastAPI?
+
 
 ## Troubleshooting
 

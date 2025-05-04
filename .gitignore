@@ -1,8 +1,12 @@
-/myenv
+__pycache__
+
 /Input-videos/*.mp4
 /Output-videos/*.mp4
-__pycache__
-test.csv
 *.mp4
 
+test.csv
 character_predictions.xlsx
+
+/myenv
+/cropped
+/cropped/*

@@ -79,46 +79,46 @@ git clone https://github.com/rlabbe/filterpy.git
 
 You can easily run this project using Docker. Follow the steps below to build and run the application in a containerized environment.
 
-#### 📦 Prerequisites
+1. Prerequisites
 
-* [Docker](https://www.docker.com/get-started) installed on your machine
+   * [Docker](https://www.docker.com/get-started) installed on your machine
 
-#### 🚀 Build the Docker Image
+2. Build the Docker Image
 
-```bash
-docker build -t gate-guard-ai .
-```
+   ```bash
+   docker build -t gate-guard-ai .
+   ```
 
-> This will:
->
-> * Use Python 3.11-slim as a base
-> * Copy your project files into the container
-> * Install required system dependencies (`libgl1`, `libglib2.0-0`)
-> * Install Python dependencies from `requirements.txt`
+   > This will:
+   >
+   > * Use Python 3.11-slim as a base
+   > * Copy your project files into the container
+   > * Install required system dependencies (`libgl1`, `libglib2.0-0`)
+   > * Install Python dependencies from `requirements.txt`
 
-#### ▶️ Run the Docker Container
+3. Run the Docker Container
 
-```bash
-docker run -p 8000:8000 gate-guard-ai
-```
+   ```bash
+   docker run -p 8000:8000 gate-guard-ai
+   ```
 
-> This starts the FastAPI server using `uvicorn` on port `8000`.
+   > This starts the FastAPI server using `uvicorn` on port `8000`.
 
-You can now access your API at: [http://localhost:8000](http://localhost:8000)
+   You can now access your API at: [http://localhost:8000](http://localhost:8000)
 
-#### 🔁 Auto-Reload (Development Mode)
+4. Auto-Reload (Development Mode)
 
-To enable live reloading (already enabled via `--reload` in CMD), make sure you **mount your local volume** like this:
+   To enable live reloading (already enabled via `--reload` in CMD), make sure you **mount your local volume** like this:
 
-```bash
-docker run -p 8000:8000 -v ${PWD}:/app gate-guard-ai
-```
+   ```bash
+   docker run -p 8000:8000 -v ${PWD}:/app gate-guard-ai
+   ```
 
-> Changes made to the code will automatically reflect inside the container.
+   > Changes made to the code will automatically reflect inside the container.
 
----
+   ---
 
-Would you like me to generate a `docker-compose.yml` file for easier multi-container setup or add examples for endpoints in FastAPI?
+   Would you like me to generate a `docker-compose.yml` file for easier multi-container setup or add examples for endpoints in FastAPI?
 
 
 ## Troubleshooting

@@ -34,7 +34,7 @@ def predict_characters(model_n, img_1):
         model_n (torch.nn.Module): The trained model for character recognition.
         path (str): The path to the image file.
     Returns:
-        None
+        list: A list of predicted characters and their probabilities.
     """
     results = []
 

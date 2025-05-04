@@ -57,7 +57,7 @@ def final_model(frame):
     # detect the first car in the frame
     first_car = frame[int(
                 detections_[0][1]):int(detections_[0][3]), int(detections_[0][0]): int(detections_[0][2]), :]
-    output_path = os.path.join("cloped", f"car.png")
+    output_path = os.path.join("cropped", f"car.png")
     cv2.imwrite(output_path, first_car)
 
 

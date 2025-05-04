@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
 import base64
-from core.main_V4 import final_model
+from core.main import final_model
 
 import cv2
 import numpy as np
@@ -10,7 +10,7 @@ app = FastAPI()
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    print("Connection open")
+    print("Connection Open...")
 
     try:
         while True:
@@ -31,13 +31,13 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
             
             # Process image using your YOLO model
-            license_plate_text = final_model(frame)
-            print("Detected Plate:", license_plate_text)
+            result = final_model(frame)
+            print("Detected Plate:", result)
             
             # Send detected license plate text back
-            await websocket.send_text(f"Detected Plate: {license_plate_text}")
+            await websocket.send_text(f"{result}")
 
     except Exception as e:
-        print("Error:", e)
+        print("Connection Error:", e)
     finally:
-        print("Connection closed")
+        print("Connection Closed...")

@@ -1,1 +1,1 @@
-from .main_V3 import final_model
+from .main import final_model

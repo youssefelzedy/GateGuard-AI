@@ -34,20 +34,22 @@ def final_model(frame):
         frame (numpy.ndarray): The video frame to be processed.
         
     Returns:
-    tuple: A tuple containing the recognized characters and the license plate text.
+    tuple: A tuple containing the recognized characters and the license plate text and palte, car detections.
     """
     try:
         # detect vehicles
         detections = coco_model(frame)[0]
         detections_ = []
         final_results = []
+        car_id = 1
         for detection in detections.boxes.data.tolist():
             x1, y1, x2, y2, score, class_id = detection
             if int(class_id) in vehicles:
-                detections_.append([x1, y1, x2, y2, score])
+                detections_.append([x1, y1, x2, y2, car_id])
+                car_id += 1
 
         # track vehicles
-        track_ids = mot_tracker.update(np.asarray(detections_))
+        # track_ids = mot_tracker.update(np.asarray(detections_))
         
         # Check if there are any detections
         if len(detections_) == 0:
@@ -68,7 +70,7 @@ def final_model(frame):
         if first_car is None or first_car.size == 0:
             return "No valid car detected"
 
-        output_path = os.path.join("cloped", f"car.png")
+        output_path = os.path.join("cropped", f"car.png")
         cv2.imwrite(output_path, first_car)
 
         # detect license plates
@@ -85,7 +87,7 @@ def final_model(frame):
 
             # assign license plate to car
             xcar1, ycar1, xcar2, ycar2, car_id = get_car(
-                license_plate, track_ids
+                license_plate, detections_
             )
 
             if car_id != -1:
@@ -110,9 +112,9 @@ def final_model(frame):
                 # get character bboxes
                 character_bboxes = sorted(character_bboxes, key=lambda x: x[0])
                 character_bboxes = remove_duplicate_boxes(character_bboxes, threshold=5)
-                char_res = segment_characters(image_enhanced, character_bboxes, new_OCR_model)
+                # char_res = segment_characters(image_enhanced, character_bboxes, new_OCR_model)
 
-                output_path = os.path.join("cloped", f"plate.png")
+                output_path = os.path.join("cropped", f"plate.png")
                 cv2.imwrite(output_path, image_enhanced)
 
                 # print the size of cropped license plate image = license_plate_crop
@@ -151,13 +153,14 @@ def final_model(frame):
                 num, char = separate_numbers_letters(sorted_predictions, x2 - x1)
 
                 # format license plate
-                license_plate_text = format_license(num, char, char_res)
-                final_results.append([license_plate_text, [xcar1, ycar1, xcar2, ycar2, car_id], [x1, y1, x2, y2, score, class_id], char_res])
+                license_plate_text = format_license(num, char)
+                final_results.append([license_plate_text, [xcar1, ycar1, xcar2, ycar2, car_id], [x1, y1, x2, y2, score, class_id]])
 
                 print("License Plate =======================")
                 print(license_plate_text)
                 print("=====================================")
             else:
+                print("No car detected for this license plate.")
                 final_results.append(["No car detected for this license plate."])
                 continue
         return final_results

@@ -20,7 +20,7 @@ def segment_characters(license_plate_crop, character_bboxes, model):
 
     text = []
     # Create the 'cloped' folder if it doesn't exist
-    output_folder = "cloped"
+    output_folder = "cropped"
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -44,16 +44,16 @@ def segment_characters(license_plate_crop, character_bboxes, model):
             11, 2  # Try increasing blockSize to 11 or 15
         )
 
-        # Save the cropped character to the 'cloped' folder
-        output_path = os.path.join(output_folder, f"char_{i}.png")
+        # # Save the cropped character to the 'cloped' folder
+        # output_path = os.path.join(output_folder, f"char_{i}.png")
         
-        # Ensure unique filenames by appending a number if the file already exists
-        counter = 1
-        while os.path.exists(output_path):
-            output_path = os.path.join(output_folder, f"char_{i}_{counter}.png")
-            counter += 1
+        # # Ensure unique filenames by appending a number if the file already exists
+        # counter = 1
+        # while os.path.exists(output_path):
+        #     output_path = os.path.join(output_folder, f"char_{i}_{counter}.png")
+        #     counter += 1
         
-        cv2.imwrite(output_path, blurred)
+        # cv2.imwrite(output_path, blurred)
 
         # # Apply Laplacian filter to enhance edges
         # laplacian = cv2.Laplacian(
@@ -61,7 +61,7 @@ def segment_characters(license_plate_crop, character_bboxes, model):
         # # Convert back to uint8
         # laplacian = np.uint8(np.absolute(laplacian))
 
-        characters = predict_characters(model, blurred)
+        characters = predict_characters(model, thresholded)
 
         # Append the predicted character to the list
         text.append(characters)

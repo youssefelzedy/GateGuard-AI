@@ -25,7 +25,7 @@ code_ar = {'س':0,'و':1,'ط':2,'ف':3,'ا':4,'٣':5,'٩':6,'ق':7,'١':8,'٤':9
            'ي':13,'ج':14,'٧':15,'٨':16,'ه':17,'د':18,'٢':19,'م':20,'ر':21,'ل':22,'ن':23,'٦':24,'ع':25 }
 
 
-def format_license(num, char, char_res):
+def format_license(num, char):
     """
     Format the license plate text.
 

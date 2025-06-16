@@ -10,3 +10,5 @@ character_predictions.xlsx
 /myenv
 /cropped
 /cropped/*
+
+.env

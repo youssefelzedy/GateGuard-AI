@@ -17,5 +17,9 @@ WORKDIR /app
 
 COPY . /app
 
+# Step 1: Install base requirements
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
+
+# Step 2: Install filterpy from GitHub
+RUN pip install --no-cache-dir git+https://github.com/rlabbe/filterpy.git

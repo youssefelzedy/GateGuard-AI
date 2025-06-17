@@ -10,6 +10,7 @@ RUN apt update && apt install -y \
     libsm6 \
     libxext6 \
     libxrender1 \
+    git \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

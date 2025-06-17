@@ -23,3 +23,5 @@ RUN pip install --upgrade pip \
 
 # Step 2: Install filterpy from GitHub
 RUN pip install --no-cache-dir git+https://github.com/rlabbe/filterpy.git
+
+CMD ["uvicorn", "api.server:app", "--host", "0.0.0.0", "--port", "3000", "--reload"]

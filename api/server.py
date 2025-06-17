@@ -20,6 +20,14 @@ latest_result = None
 latest_result_json = None
 
 def process_frames():
+    """
+    Continuously capture frames from the IP camera, process them with the YOLO model,
+    and log the results.
+    This function runs in a separate thread to avoid blocking the main application.
+    It retrieves active cameras from the database, captures frames, decodes them,
+    and processes them to detect license plates and vehicles.
+    It also logs the results in the database.
+    """
     global latest_frame, latest_result, latest_result_json
 
     cameras = get_active_cameras()
@@ -112,9 +120,8 @@ def process_frames():
         time.sleep(1)
 
  
-'''
-Start thread to capture frames from the IP camera.
-'''
+
+# Start thread to capture frames from the IP camera.
 threading.Thread(target=process_frames, daemon=True).start()
 
 
@@ -126,6 +133,11 @@ threading.Thread(target=process_frames, daemon=True).start()
 
 @app.get("/result")
 def get_result():
+    """
+    Retrieve the latest processed result.
+    Returns:
+        dict: The latest result in JSON format, or a message indicating no result yet.
+    """
     if latest_result_json is None:
         return {"message": "No result yet"}
     return latest_result_json

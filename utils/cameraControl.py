@@ -20,5 +20,10 @@ camera_col = db[CAMERA_COLLECTION]
 
 
 def get_active_cameras():
+    """
+    Retrieve all active cameras from the database.
+    Returns:
+        list: A list of active cameras.
+    """
     cameras = list(camera_col.find({"cameraStatus": "active"}))
     return cameras

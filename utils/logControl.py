@@ -22,12 +22,23 @@ def create_log(
     plate_box: list,
     user_id: str,
     garage_id: str,
-    status: str  # 'Denied' or 'Accepted'
+    status: str
 ):
+    """
+    Create a log entry in the database.
+    Args:
+        plate_text (str): The recognized text from the license plate.
+        car_box (list): Bounding box coordinates for the detected car.
+        plate_box (list): Bounding box coordinates for the detected license plate.
+        user_id (str): The ID of the user associated with the garage.
+        garage_id (str): The ID of the garage where the log is being created.
+        status (str): The action status, e.g., 'Accepted' or 'Denied'.
+        Returns:
+        str: The ID of the created log entry."""
     log_data = {
         "plateText": plate_text,
-        "carDetection": [car_box],       # لازم تكون list of lists
-        "plateDetection": [plate_box],   # نفس الكلام
+        "carDetection": [car_box],
+        "plateDetection": [plate_box],
         "user": ObjectId(user_id),
         "garage": ObjectId(garage_id),
         "action": status,

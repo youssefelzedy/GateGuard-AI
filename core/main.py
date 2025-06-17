@@ -70,8 +70,8 @@ def final_model(frame):
         if first_car is None or first_car.size == 0:
             return "No valid car detected"
 
-        output_path = os.path.join("cropped", f"car.png")
-        cv2.imwrite(output_path, first_car)
+        # output_path = os.path.join("cropped", f"car.png")
+        # cv2.imwrite(output_path, first_car)
 
         # detect license plates
         license_plates = license_plate_detector2(frame)[0]
@@ -114,8 +114,8 @@ def final_model(frame):
                 character_bboxes = remove_duplicate_boxes(character_bboxes, threshold=5)
                 # char_res = segment_characters(image_enhanced, character_bboxes, new_OCR_model)
 
-                output_path = os.path.join("cropped", f"plate.png")
-                cv2.imwrite(output_path, image_enhanced)
+                # output_path = os.path.join("cropped", f"plate.png")
+                # cv2.imwrite(output_path, image_enhanced)
 
                 # print the size of cropped license plate image = license_plate_crop
                 # print("license_plate_crop ==========================")

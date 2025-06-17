@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      container_name: GateGuard-AI
+      restart: unless-stopped
+      environment:
+        - MONGO_URI=${MONGO_URI}
+        - USERNAME=${USERNAME}
+        - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        - DATABASE_NAME=${DATABASE_NAME}
+        - LOGS_COLLECTION=${LOGS_COLLECTION}
+        - GARAGE_COLLECTION=${GARAGE_COLLECTION}
+        - CAMERA_COLLECTION=${CAMERA_COLLECTION}
+        - USER_COLLECTION=${USER_COLLECTION}
+        - PORT=${PORT}
+      ports:
+        - "3000:3000"
+      networks:
+        - gateguard-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: gateguard-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - webroot:/var/www/html
+    depends_on:
+      - app
+    networks:
+      - gateguard-network
+
+networks:
+  gateguard-network:
+    driver: bridge
+   

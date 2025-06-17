@@ -37,4 +37,6 @@ services:
 networks:
   gateguard-network:
     driver: bridge
-   
+
+volumes:
+  webroot:

@@ -21,7 +21,7 @@ mot_tracker = Sort()
 coco_model = YOLO('./models/yolov8n.pt')
 license_plate_detector2 = YOLO('./models/yolo11m_car_plate_trained.pt')
 detect_characters_model = YOLO('./models/best.pt')
-new_OCR_model = keras.models.load_model('./models/arabic-OCR-new-with-3-dataset-last-v2.h5')
+# new_OCR_model = keras.models.load_model('./models/arabic-OCR-new-with-3-dataset-last-v2.h5')
 
 vehicles = [2, 3, 5, 7]
 

@@ -3,22 +3,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      container_name: GateGuard-AI
-      restart: unless-stopped
-      environment:
-        - MONGO_URI=${MONGO_URI}
-        - USERNAME=${USERNAME}
-        - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-        - DATABASE_NAME=${DATABASE_NAME}
-        - LOGS_COLLECTION=${LOGS_COLLECTION}
-        - GARAGE_COLLECTION=${GARAGE_COLLECTION}
-        - CAMERA_COLLECTION=${CAMERA_COLLECTION}
-        - USER_COLLECTION=${USER_COLLECTION}
-        - PORT=${PORT}
-      ports:
-        - "3000:3000"
-      networks:
-        - gateguard-network
+    container_name: GateGuard-AI
+    restart: unless-stopped
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - USERNAME=${USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - LOGS_COLLECTION=${LOGS_COLLECTION}
+      - GARAGE_COLLECTION=${GARAGE_COLLECTION}
+      - CAMERA_COLLECTION=${CAMERA_COLLECTION}
+      - USER_COLLECTION=${USER_COLLECTION}
+      - PORT=${PORT}
+    ports:
+      - "3000:3000"
+    networks:
+      - gateguard-network
 
   nginx:
     image: nginx:alpine

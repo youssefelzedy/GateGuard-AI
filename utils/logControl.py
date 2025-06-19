@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson import ObjectId
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -49,3 +49,19 @@ def create_log(
     result = logs_col.insert_one(log_data)
     return str(result.inserted_id)
 
+def check_log_exists_recently(plate_text: str, cooldown_minutes: int = 12) -> bool:
+    """
+    Check if a log exists for the same plate text within the last X minutes.
+    """
+    now = datetime.utcnow()
+    cooldown_start = now - timedelta(minutes=cooldown_minutes)
+
+    log = logs_col.find_one({
+        "plateText": plate_text,
+        "accessTime": {
+            "$gte": cooldown_start,
+            "$lte": now
+        }
+    })
+
+    return log is not None

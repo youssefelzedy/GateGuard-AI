@@ -6,6 +6,7 @@ from core.main import final_model
 from utils.cameraControl import get_active_cameras
 from utils.userControl import get_users_by_garage
 from utils.logControl import create_log
+from utils.garageControl import check_garage_status, update_garage_status
 
 import cv2
 import numpy as np
@@ -116,7 +117,7 @@ def process_frames():
             finally:
                 print("Connection Closed...")
 
-    # Wait for a short period before the next iteration
+        # Wait for a short period before the next iteration
         time.sleep(1)
 
  
@@ -141,3 +142,15 @@ def get_result():
     if latest_result_json is None:
         return {"message": "No result yet"}
     return latest_result_json
+
+@app.get("/check-gate-status")
+def check_gate_status(garage: str):
+    """
+    Check the status of the gate.
+    Returns:
+        False if the gate is closed, True if it is open.
+    """
+    garage_status = check_garage_status(garage)
+    if garage_status == {"open": True}:
+        return {"status": True, "message": "Gate is open"}
+    return {"status": False, "message": "Gate is closed"}

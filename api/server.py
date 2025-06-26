@@ -133,7 +133,7 @@ def process_frames():
                 print("Connection Closed...")
 
         # Wait for a short period before the next iteration
-        time.sleep(5)
+        time.sleep(12)
 
  
 

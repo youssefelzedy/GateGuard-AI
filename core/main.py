@@ -109,6 +109,13 @@ def final_model(frame):
                     detect_characters_model, image_enhanced
                 )
                 
+                if not (len(detected_numbers) >= 1 and len(detected_letters) <= 4):
+                    final_results.append(["Invalid license plate format"])
+                    continue
+                if not (len(detected_letters) >= 1 and len(detected_letters) <= 3):
+                    final_results.append(["Invalid character bounding boxes"])
+                    continue
+
                 # get character bboxes
                 character_bboxes = sorted(character_bboxes, key=lambda x: x[0])
                 character_bboxes = remove_duplicate_boxes(character_bboxes, threshold=5)

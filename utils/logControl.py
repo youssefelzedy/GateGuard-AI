@@ -22,7 +22,8 @@ def create_log(
     plate_box: list,
     user_id: str,
     garage_id: str,
-    status: str
+    status: str,
+    processed: bool = False
 ):
     """
     Create a log entry in the database.
@@ -35,15 +36,29 @@ def create_log(
         status (str): The action status, e.g., 'Accepted' or 'Denied'.
         Returns:
         str: The ID of the created log entry."""
-    log_data = {
-        "plateText": plate_text,
-        "carDetection": [car_box],
-        "plateDetection": [plate_box],
-        "user": ObjectId(user_id),
-        "garage": ObjectId(garage_id),
-        "action": status,
-        "accessTime": datetime.utcnow()
-    }
+    
+    if user_id is None:
+        log_data = {
+            "plateText": plate_text,
+            "carDetection": [car_box],
+            "plateDetection": [plate_box],
+            "user": None,
+            "garage": ObjectId(garage_id),
+            "action": status,
+            "accessTime": datetime.utcnow(),
+            "processed": processed
+        }
+    else:
+        log_data = {
+            "plateText": plate_text,
+            "carDetection": [car_box],
+            "plateDetection": [plate_box],
+            "user": ObjectId(user_id),
+            "garage": ObjectId(garage_id),
+            "action": status,
+            "accessTime": datetime.utcnow(),
+            "processed": processed
+        }
 
 
     result = logs_col.insert_one(log_data)
